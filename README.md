@@ -1,7 +1,8 @@
 # DCM Analytics
 A public-facing repository containing the code used for gameplay telemetry in
-the game [Iris Burning](https://irisburning.com/), licensed under the Apache
-License version 2.0.
+the game [Iris Burning](https://irisburning.com/). This code is icensed under
+the Apache License version 2.0, whereas Iris Burning is licensed under the
+terms of its own EULA.
 
 Iris Burning is a trademark of Die-Cast Magic Studios, LLC.  Copyright 2017 -
 All rights reserved.  We release any and all warranty, express or implied, 
