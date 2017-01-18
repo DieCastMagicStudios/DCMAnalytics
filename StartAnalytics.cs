@@ -24,7 +24,7 @@ namespace DieCastMagic.AnalyticsIntegration {
 	/// A script assigned in the editor to allow telemetry calls to be posted
 	/// to the GameAnalytics frontend.
 	/// </summary>
-	public sealed class StartAnalytics {
+	public sealed class StartAnalytics : MonoBehaviour {
 		
 		void Awake() {
 			DontDestroyOnLoad(gameObject);

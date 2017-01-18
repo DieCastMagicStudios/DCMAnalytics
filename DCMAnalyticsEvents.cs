@@ -44,7 +44,7 @@ namespace DieCastMagic.AnalyticsIntegration {
 				case AMatchEvent.Loss:
 					return "match_loss";
 				default:
-					return "invalid_event"
+                    return "invalid_event";
 			}
 		}
 	}

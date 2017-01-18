@@ -45,10 +45,10 @@ namespace DieCastMagic.AnalyticsIntegration {
 					return "research";
 				case AResource.Population:
 					return "population";
-				case AResource.Favor
+                case AResource.Favor:
 					return "favor";
 				default:
-					return "invalid_resource"
+                    return "invalid_resource";
 			}
 		}
 	}
@@ -98,24 +98,25 @@ namespace DieCastMagic.AnalyticsIntegration {
 		UnitGenerated = 1,
 		NPCGenerated = 2
 	}
-	
-	/// <summary>
-	/// Extension helper methods for the AResourceType enumeration.
-	/// </summary>
-	public static class AResourceAcquisitionExtensions {
-		/// <summary>
-		/// Returns a GameAnalytics-friendly string from this AResourceAcquisition.
-		/// </summary>
-		public static string ToAnalyticsString(this AAResourceAcquisition val) {
-			switch (val) {
-				case AResourceAcquisition.BuildingGenerated:
-					return "building_generated";
-				case AResourceAcquisition.Cash:
-					return "unit_generated";
-				case AResourceAcquisition.Cash:
-					return "npc_generated";
-				default:
-					return "invalid_resource_acqisition";
-		}
-	}
+
+    /// <summary>
+    /// Extension helper methods for the AResourceType enumeration.
+    /// </summary>
+    public static class AResourceAcquisitionExtensions {
+        /// <summary>
+        /// Returns a GameAnalytics-friendly string from this AResourceAcquisition.
+        /// </summary>
+        public static string ToAnalyticsString(this AResourceAcquisition val) {
+            switch (val) {
+                case AResourceAcquisition.BuildingGenerated:
+                    return "building_generated";
+                case AResourceAcquisition.UnitGenerated:
+                    return "unit_generated";
+                case AResourceAcquisition.NPCGenerated:
+                    return "npc_generated";
+                default:
+                    return "invalid_resource_acqisition";
+            }
+        }
+    }
 }

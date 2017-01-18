@@ -17,9 +17,12 @@
  */
 
 using System;
+using System.Text;
 using System.IO;
 using System.Security.Cryptography;
 using System.Collections.Generic;
+using GameAnalyticsSDK;
+using GameAnalyticsSDK.Events;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -143,17 +146,20 @@ namespace DieCastMagic.AnalyticsIntegration {
 			// data collection, they do not have to have it.
 			if (!doneInit || !playerOptedIn) return;
 			
-			GA_Progression.GAProgressionStatus status;
+			GAProgressionStatus status;
 			switch (evt) {
 				case AMatchEvent.Start:
-					status = GAProgressionStatus.GAProgressionStatusStart;
+					status = GAProgressionStatus.Start;
 					break;
 				case AMatchEvent.Win:
-					status = GAProgressionStatus.GAProgressionStatusComplete;
+					status = GAProgressionStatus.Complete;
 					break;
 				case AMatchEvent.Loss:
-					status = GAProgressionStatus.GAProgressionStatusFail;
+					status = GAProgressionStatus.Fail;
 					break;
+                default:
+                    status = GAProgressionStatus.Undefined;
+                    break;
 			}
 			
 			Scene current = SceneManager.GetActiveScene();
@@ -178,8 +184,8 @@ namespace DieCastMagic.AnalyticsIntegration {
 			if (!doneInit || !playerOptedIn || amount == 0f) return;
 			
 			GameAnalytics.NewResourceEvent (
-				amount > 0 ? GA_Resource.GAResourceFlowType.GAResourceFlowTypeSource :
-                GA_Resource.GAResourceFlowType.GAResourceFlowTypeSink,
+				amount > 0 ? GAResourceFlowType.Source:
+                GAResourceFlowType.Sink,
 				whichResource.ToAnalyticsString(),
 				amount,
 				how.ToAnalyticsString(),
@@ -209,7 +215,7 @@ namespace DieCastMagic.AnalyticsIntegration {
 			
 			Scene current = SceneManager.GetActiveScene();
 			if (current.buildIndex <= 0) return; // title screen or assetbundle
-			string evt = current.name + ":" + ModeString() + ":"
+            string evt = current.name + ":" + ModeString() + ":";
 				
 			GameAnalytics.NewDesignEvent (evt, value);
 			AppendLog("FLOAT:" + evt + "," + value);
@@ -270,7 +276,7 @@ namespace DieCastMagic.AnalyticsIntegration {
 		/// GameAnalytics-friendly string format.
 		/// </summary>
 		private static string ModeString() {
-			return (PhotonNetwork.isConnectedAndReady && PhotonNetwork.inRoom) ?
+			return (PhotonNetwork.connectedAndReady && PhotonNetwork.inRoom) ?
 				MODE_MULTIPLAYER : MODE_SINGLEPLAYER;
 		}
 		
@@ -286,7 +292,7 @@ namespace DieCastMagic.AnalyticsIntegration {
 		/// values are considered true.
 		/// </summary>
 		private static bool IntToBool(int i) {
-			return i == 0 ? 0 : 1;
+			return i == 0 ? false : true;
 		}
 		
 		/// <summary>
@@ -295,7 +301,7 @@ namespace DieCastMagic.AnalyticsIntegration {
 		private static string Hash(string input) {
 			using (SHA1Managed sha1 = new SHA1Managed()) {
 				var hash = sha1.ComputeHash(Encoding.UTF8.GetBytes(input));
-				var sb = new StringBuilder(hash.Length * 2)
+                var sb = new StringBuilder(hash.Length * 2);
 				foreach (byte b in hash) sb.Append(b.ToString("x2"));
 				return sb.ToString();
 			}
@@ -305,7 +311,7 @@ namespace DieCastMagic.AnalyticsIntegration {
 		/// Returns the local system newline.
 		/// </summary>
 		private static string GetNewline() {
-			return System.Environment.NewLine;
+			return Environment.NewLine;
 		}
 		
 		/// <summary>
@@ -329,7 +335,7 @@ namespace DieCastMagic.AnalyticsIntegration {
 		/// </summary>
 		public static void WriteLogfile() {
 			if (eventLog.Count == 0) return;
-			const string persistent = Application.persistentDataPath;
+			string persistent = Application.persistentDataPath;
 			string filename = persistent + "DCMAnalytics_"
 				+ (DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)))
 				.TotalSeconds.ToString() + "_" + Mathf.Round(Time.time)
